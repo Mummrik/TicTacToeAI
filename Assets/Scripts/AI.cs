@@ -1,16 +1,16 @@
 ﻿using System;
+using System.Net.Sockets;
 using UnityEngine;
 
 public class AI : MonoBehaviour
 {
-
     public bool isMovesLeft(Tile[,] board)
     {
         for (int x = 0; x < 3; x++)
         {
             for (int y = 0; y < 3; y++)
             {
-                if (board[x,y].owner == 0)
+                if (board[x, y].owner == 0)
                 {
                     return true;
                 }
@@ -22,12 +22,12 @@ public class AI : MonoBehaviour
     public Vector2Int BestMove(Tile[,] board)
     {
         int bestScore = int.MinValue;
-        Vector2Int nextMove = -Vector2Int.one;
+        Vector2Int nextMove = Vector2Int.zero;
         for (int x = 0; x < 3; x++)
         {
             for (int y = 0; y < 3; y++)
             {
-                if (board[x,y].owner == 0)
+                if (board[x, y].owner == 0)
                 {
                     board[x, y].owner = 1;
                     int score = Minimax(board, 0, false);
@@ -41,22 +41,103 @@ public class AI : MonoBehaviour
                 }
             }
         }
-
         return nextMove;
+    }
+
+    public enum WinEnum
+    {
+        Lose = -1,
+        None,
+        Tie = 0,
+        Win
+    }
+    public WinEnum WinCheck(Tile[,] board)
+    {
+        // Horizontal
+        for (int x = 0; x < 3; x++)
+        {
+            if (board[x, 0].owner == board[x, 1].owner && board[x, 1].owner == board[x, 2].owner)
+            {
+                if (board[x, 0].owner == -1)
+                {
+                    return WinEnum.Lose;
+                }
+
+                if (board[x, 0].owner == 1)
+                {
+                    return WinEnum.Win;
+                }
+            }
+        }
+
+        // Vertical
+        for (int y = 0; y < 3; y++)
+        {
+            if (board[0, y].owner == board[1, y].owner && board[1, y].owner == board[2, y].owner)
+            {
+                if (board[0, y].owner == -1)
+                {
+                    return WinEnum.Lose;
+                }
+
+                if (board[0, y].owner == 1)
+                {
+                    return WinEnum.Win;
+                }
+            }
+        }
+
+        // Diagonal 1
+        if (board[0, 0].owner == board[1, 1].owner && board[1, 1].owner == board[2, 2].owner)
+        {
+            if (board[0, 0].owner == -1)
+            {
+                return WinEnum.Lose;
+            }
+
+            if (board[0, 0].owner == 1)
+            {
+                return WinEnum.Win;
+            }
+        }
+
+        // Diagonal 2
+        if (board[2, 0].owner == board[1, 1].owner && board[1, 1].owner == board[0, 2].owner)
+        {
+            if (board[2, 0].owner == -1)
+            {
+                return WinEnum.Lose;
+            }
+
+            if (board[2, 0].owner == 1)
+            {
+                return WinEnum.Win;
+            }
+        }
+
+        //if (isMovesLeft(board))
+        //{
+        //    return WinEnum.Tie;
+        //}
+
+        return WinEnum.None;
     }
 
     public int Minimax(Tile[,] board, int depth, bool isMaximizing)
     {
-        int score = Evaluate(board);
+        WinEnum condition = WinCheck(board);
 
-        if (score == 1 || score == -1)
+        if (condition != WinEnum.None)
         {
-            return score;
-        }
-
-        if (isMovesLeft(board) == false)
-        {
-            return 0;
+            switch (condition)
+            {
+                case WinEnum.Lose:
+                    return -10 + depth;
+                case WinEnum.Tie:
+                    return 0;
+                case WinEnum.Win:
+                    return 100 - depth; // prioritize to not lose the game
+            }
         }
 
         if (isMaximizing)
@@ -67,10 +148,10 @@ public class AI : MonoBehaviour
             {
                 for (int y = 0; y < 3; y++)
                 {
-                    if (board[x,y].owner == 0)
+                    if (board[x, y].owner == 0)
                     {
                         board[x, y].owner = 1;
-                        bestScore = Math.Max(bestScore, Minimax(board, depth + 1, !isMaximizing));
+                        bestScore = Math.Max(Minimax(board, depth + 1, !isMaximizing), bestScore);
                         board[x, y].owner = 0;
                     }
                 }
@@ -88,7 +169,7 @@ public class AI : MonoBehaviour
                     if (board[x, y].owner == 0)
                     {
                         board[x, y].owner = -1;
-                        bestScore = Math.Max(bestScore, Minimax(board, depth + 1, !isMaximizing));
+                        bestScore = Math.Min(bestScore, Minimax(board, depth + 1, !isMaximizing));
                         board[x, y].owner = 0;
                     }
                 }
@@ -96,48 +177,5 @@ public class AI : MonoBehaviour
             return bestScore;
         }
 
-    }
-
-    private int Evaluate(Tile[,] board)
-    {
-        for (int x = 0; x < 3; x++)
-        {
-            if (board[x, 0] == board[x, 1] && board[x, 1] == board[x, 2])
-            {
-                if (board[x, 0].owner == -1 || board[x, 0].owner == 1)
-                {
-                    return board[x, 0].owner;
-                }
-            }
-        }
-
-        for (int y = 0; y < 3; y++)
-        {
-            if (board[0, y] == board[1, y] && board[1, y] == board[2, y])
-            {
-                if (board[0, y].owner == -1 || board[0, y].owner == 1)
-                {
-                    return board[0, y].owner;
-                }
-            }
-        }
-
-        if (board[0, 0] == board[1, 1] && board[1, 1] == board[2, 2])
-        {
-            if (board[0, 0].owner == -1 || board[0, 0].owner == 1)
-            {
-                return board[0, 0].owner;
-            }
-        }
-
-        if (board[2, 0] == board[1, 1] && board[1, 1] == board[0, 2])
-        {
-            if (board[2, 0].owner == -1 || board[2, 0].owner == 1)
-            {
-                return board[2, 0].owner;
-            }
-        }
-
-        return 0;
     }
 }

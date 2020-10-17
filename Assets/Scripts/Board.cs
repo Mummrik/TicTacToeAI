@@ -36,6 +36,7 @@ public class Board : MonoBehaviour
     void Start()
     {
         CreateBoard();
+        RandomAIDecision().PlaceAiMarker();
     }
 
     private void CreateBoard()
@@ -70,7 +71,7 @@ public class Board : MonoBehaviour
             gameover = true;
             return false;
         }
-        else if (turns >= 5)
+        else if (turns >= 4)
         {
             winText.text = "It's a Draw.";
             winText.gameObject.SetActive(true);
@@ -101,7 +102,6 @@ public class Board : MonoBehaviour
     {
         Vector2Int move = ai.BestMove(grid);
         grid[move.x, move.y].PlaceAiMarker();
-        //RandomAIDecision().PlaceAiMarker();
     }
 
     private bool WinCheck()

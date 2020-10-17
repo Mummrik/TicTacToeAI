@@ -144,5 +144,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad819b430737657429c570f65b8e12c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerSprite: {fileID: 21300000, guid: e8305c2d9ce97854780636e53d8e191e, type: 3}
-  aiSprite: {fileID: 21300000, guid: a4afd4012699109469477ea7c93b1d49, type: 3}
+  playerSprite: {fileID: 21300000, guid: a4afd4012699109469477ea7c93b1d49, type: 3}
+  aiSprite: {fileID: 21300000, guid: e8305c2d9ce97854780636e53d8e191e, type: 3}
+  owner: 0
