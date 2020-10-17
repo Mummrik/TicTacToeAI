@@ -29,7 +29,7 @@ public class AI : MonoBehaviour
                 if (board[x, y].owner == 0)
                 {
                     board[x, y].owner = 1;
-                    int score = Minimax(board, 0, false);
+                    int score = Minimax(board, 0, false, int.MinValue, int.MaxValue);
                     board[x, y].owner = 0;
 
                     if (score > bestScore)
@@ -122,7 +122,7 @@ public class AI : MonoBehaviour
         return WinEnum.None;
     }
 
-    public int Minimax(Tile[,] board, int depth, bool isMaximizing)
+    public int Minimax(Tile[,] board, int depth, bool isMaximizing, int alpha, int beta)
     {
         WinEnum condition = WinCheck(board);
 
@@ -150,8 +150,15 @@ public class AI : MonoBehaviour
                     if (board[x, y].owner == 0)
                     {
                         board[x, y].owner = 1;
-                        bestScore = Math.Max(Minimax(board, depth + 1, !isMaximizing), bestScore);
+                        int score = Minimax(board, depth + 1, !isMaximizing, alpha, beta);
+                        bestScore = Math.Max(bestScore, score);
+                        alpha = Math.Max(alpha, bestScore);
                         board[x, y].owner = 0;
+
+                        if (beta <= alpha)
+                        {
+                            break;
+                        }
                     }
                 }
             }
@@ -168,8 +175,14 @@ public class AI : MonoBehaviour
                     if (board[x, y].owner == 0)
                     {
                         board[x, y].owner = -1;
-                        bestScore = Math.Min(bestScore, Minimax(board, depth + 1, !isMaximizing));
+                        int score = Minimax(board, depth + 1, !isMaximizing, alpha, beta);
+                        bestScore = Math.Min(bestScore, score);
+                        beta = Math.Min(beta, bestScore);
                         board[x, y].owner = 0;
+                        if (beta <= alpha)
+                        {
+                            break;
+                        }
                     }
                 }
             }
