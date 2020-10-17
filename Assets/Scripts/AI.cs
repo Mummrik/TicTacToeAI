@@ -57,14 +57,9 @@ public class AI : MonoBehaviour
         {
             if (board[x, 0].owner == board[x, 1].owner && board[x, 1].owner == board[x, 2].owner)
             {
-                if (board[x, 0].owner == -1)
+                if (board[x, 0].owner == -1 || board[x, 0].owner == 1)
                 {
-                    return WinEnum.Lose;
-                }
-
-                if (board[x, 0].owner == 1)
-                {
-                    return WinEnum.Win;
+                    return (WinEnum)board[x, 0].owner;
                 }
             }
         }
@@ -74,14 +69,9 @@ public class AI : MonoBehaviour
         {
             if (board[0, y].owner == board[1, y].owner && board[1, y].owner == board[2, y].owner)
             {
-                if (board[0, y].owner == -1)
+                if (board[0, y].owner == -1 || board[0, y].owner == 1)
                 {
-                    return WinEnum.Lose;
-                }
-
-                if (board[0, y].owner == 1)
-                {
-                    return WinEnum.Win;
+                    return (WinEnum)board[0, y].owner;
                 }
             }
         }
@@ -89,28 +79,18 @@ public class AI : MonoBehaviour
         // Diagonal 1
         if (board[0, 0].owner == board[1, 1].owner && board[1, 1].owner == board[2, 2].owner)
         {
-            if (board[0, 0].owner == -1)
+            if (board[0, 0].owner == -1 || board[0, 0].owner == 1)
             {
-                return WinEnum.Lose;
-            }
-
-            if (board[0, 0].owner == 1)
-            {
-                return WinEnum.Win;
+                return (WinEnum)board[0, 0].owner;
             }
         }
 
         // Diagonal 2
         if (board[2, 0].owner == board[1, 1].owner && board[1, 1].owner == board[0, 2].owner)
         {
-            if (board[2, 0].owner == -1)
+            if (board[2, 0].owner == -1 || board[2, 0].owner == 1)
             {
-                return WinEnum.Lose;
-            }
-
-            if (board[2, 0].owner == 1)
-            {
-                return WinEnum.Win;
+                return (WinEnum)board[2, 0].owner;
             }
         }
 

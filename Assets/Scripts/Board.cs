@@ -36,7 +36,7 @@ public class Board : MonoBehaviour
     void Start()
     {
         CreateBoard();
-        RandomAIDecision().PlaceAiMarker();
+        RandomAIDecision().PlaceAiMarker(); // Randomize AI's first move (Minimax not in use)
     }
 
     private void CreateBoard()
