@@ -11,15 +11,6 @@ public class Tile : MonoBehaviour
 
     public int owner = 0;
 
-    //public int GetOwner()
-    //{
-    //    return owner;
-    //}
-    //public void SetOwner(int newOwner)
-    //{
-    //    owner = newOwner;
-    //}
-
     public void InitializeTile(Board board)
     {
         image = GetComponent<Image>();

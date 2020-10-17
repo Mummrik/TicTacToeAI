@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.Sockets;
 using UnityEngine;
 
 public class AI : MonoBehaviour
@@ -115,10 +114,10 @@ public class AI : MonoBehaviour
             }
         }
 
-        //if (isMovesLeft(board))
-        //{
-        //    return WinEnum.Tie;
-        //}
+        if (isMovesLeft(board))
+        {
+            return WinEnum.Tie;
+        }
 
         return WinEnum.None;
     }
@@ -136,7 +135,7 @@ public class AI : MonoBehaviour
                 case WinEnum.Tie:
                     return 0;
                 case WinEnum.Win:
-                    return 100 - depth; // prioritize to not lose the game
+                    return 100 - depth;
             }
         }
 
